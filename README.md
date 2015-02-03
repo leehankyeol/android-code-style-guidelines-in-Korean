@@ -474,13 +474,13 @@ Our parting thought: BE CONSISTENT. If you're editing code, take a few minutes t
 
 The point of having style guidelines is to have a common vocabulary of coding, so people can concentrate on what you're saying, rather than on how you're saying it. We present global style rules here so people know the vocabulary. But local style is also important. If code you add to a a file looks drastically different from the existing code around it, it throws readers out of their rhythm when they go to read it. Try to avoid this.
 
-## Javatests Style Rules
+## 자바테스트 스타일 규칙
 
-Follow Test Method Naming Conventions
+### 테스트 메소드 네이밍 컨벤션을 따르라
 
-When naming test methods, you can use an underscore to seperate what is being tested from the specific case being tested. This style makes it easier to see exactly what cases are being tested.
+테스트 메소드에 이름을 붙일 때는 무엇을 테스트하고 있는지와 테스트의 대상이 되는 특정 경우를 구분하기 위해 언더스코어를 사용하면 된다. 이 스타일을 따르면 어떤 케이스를 테스트하는지 알아보기가 쉽다.
 
-For example:
+예: 
 
 	testMethod_specificCase1 testMethod_specificCase2
 
