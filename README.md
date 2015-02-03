@@ -141,11 +141,11 @@ Decision: Use the latter for importing all Android code. An explicit exception i
 
 안드로이드의 자바 라이브러리와 툴을 사용할 때에도 지켜야 할 컨벤션이 있다. 컨벤션의 핵심적인 사항이 바뀌어 이전의 코드가 더 이상 사용되지 않고 사라질(deprecated) 패턴이나 라이브러리를 사용할 때가 있다. 그렇게 짜여져 있는 코드를 다룰 때는 현재 유지되고 있는 스타일을 계속 사용하는 것도 괜찮으나 새로운 코드를 짤 때는 절대 사라질 라이브러리를 사용하지 말라.
 
-## Java Style Rules
+## 자바 스타일 규칙
 
-### Use Javadoc Standard Comments
+### 자바독(Javadoc) 표준 주석을 사용하라
 
-Every file should have a copyright statement at the top. Then a package statement and import statements should follow, each block separated by a blank line. And then there is the class or interface declaration. In the Javadoc comments, describe what the class or interface does.
+모든 파일은 저작권에 대한 기술로 시작해야 한다. 그 뒤로 패키지와 임포트`import`에 관한 문구가 이어지는데 각 블록은 한 줄을 띄운다. 그 아래로 클래스와 인터페이스를 선언한다. 자바독 주석에는 각 클래스와 인터페이스가 무엇을 하는지를 기술하라.
 
 	/*
 	 * Copyright (C) 2013 The Android Open Source Project 
@@ -179,16 +179,16 @@ Every file should have a copyright statement at the top. Then a package statemen
 	    ...
 	}
 
-Every class and nontrivial public method you write must contain a Javadoc comment with at least one sentence describing what the class or method does. This sentence should start with a 3rd person descriptive verb.
+당신이 만든 모든 클래스와 이름으로 봤을 때 기능이 자명하지 않은(nontrivial) 퍼블릭 메소드에는 각 클래스와 메소드가 무슨 일을 하는지 적어도 한 줄 이상의 자바독 주석을 달자. 이 때 각 주석문은 3인칭 단수형 동사로 시작해야 한다.
 
-Examples:
+예:
 
 	/** Returns the correctly rounded positive square root of a double value. */
 	static double sqrt(double a) {
 	    ...
 	}
 
-or
+또는
 
 	/**
 	 * Constructs a new String by converting the specified array of 
@@ -198,15 +198,15 @@ or
 	    ...
 	}
 
-You do not need to write Javadoc for trivial get and set methods such as `setFoo()` if all your Javadoc would say is "sets Foo". If the method does something more complex (such as enforcing a constraint or having an important side effect), then you must document it. And if it's not obvious what the property "Foo" means, you should document it.
+주석의 내용이 단지 "Foo를 설정한다(sets Foo)" 등 자명한 이름의 겟(get)과 셋(set) 메소드에는 자바독 주석을 달 필요가 없다. 하지만 해당 메소드가 조금 더 복잡한 일, 예를 들어 제약 조건을 강화한다거나 중대한 부작용을 야기할 수 있는 경우엔 꼭 문서화를 해야 한다. 또한 "Foo"라는 속성이 의미하는 바가 자명하지 않을 경우에도 문서화가 필요하다.
 
-Every method you write, whether public or otherwise, would benefit from Javadoc. Public methods are part of an API and therefore require Javadoc.
+당신이 작성하는 모든 메소드들에, 그것이 퍼블릭한 것이든 아니든, 자바독을 사용하는 편이 좋다. API의 일부가 되는 퍼블릭 메소드의 경우는 당연히 자바독을 필요로 한다.
 
-Android does not currently enforce a specific style for writing Javadoc comments, but you should follow the instructions [How to Write Doc Comments for the Javadoc Tool](http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html).
+안드로이드는 현재 자바독 주석을 사용함에 있어 특정한 스타일을 제시하고 있진 않지만, [자바독 툴을 위한 문서화(How to Write Doc Comments for the Javadoc Tool)](http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html)의 지시 사항을 따르는 것이 좋다.
 
-### Write Short Methods
+### 메소드를 짧게 유지하라
 
-To the extent that it is feasible, methods should be kept small and focused. It is, however, recognized that long methods are sometimes appropriate, so no hard limit is placed on method length. If a method exceeds 40 lines or so, think about whether it can be broken up without harming the structure of the program.
+가능한 한도 내에서 메소드는 한 주제에 맞게 짧게 작성되어야 한다. 어떤 경우에는 긴 메소드를 작성하는 것이 옳기 때문에 메소드 길이에 정확히 정해진 제한은 없다. 한 메소드의 길이가 40줄을 넘어가게 되면 전체 프로그램의 구조를 해치지 않는 선에서 코드를 나눌 수 있는지 생각해보라.
 
 ### Define Fields in Standard Places
 
