@@ -362,15 +362,15 @@ Since most people consider this a low priority issue, just use your judgement an
 	if (condition)
 	    body();  // bad!
 
-### Limit Line Length
+### 행 길이를 제한하라
 
-Each line of text in your code should be at most 100 characters long.
+코드의 한 행의 길이는 최대 100글자로 제한되어야 한다.
 
-There has been lots of discussion about this rule and the decision remains that 100 characters is the maximum.
+많은 토론이 있었지만 최종적으로 최대 100글자에서 제한해야 한다는 결론을 내렸다.
 
-Exception: if a comment line contains an example command or a literal URL longer than 100 characters, that line may be longer than 100 characters for ease of cut and paste.
+예외: 커맨드나 URL을 포함한 주석의 경우 한 줄에 100글자가 넘더라도 복사, 붙여넣기 등의 편이를 위해 길이를 제한하지 않는다.
 
-Exception: import lines can go over the limit because humans rarely see them. This also simplifies tool writing.
+예외: 임포트`import` 구문의 경우 사람이 직접 코드를 읽는 경우가 적기 때문에 100글자 이상의 코드를 허용한다. This also simplifies tool writing.
 
 ### Use Standard Java Annotations
 
@@ -394,11 +394,11 @@ When a @SuppressWarnings annotation is necessary, it must be prefixed with a TOD
 
 When a @SuppressWarnings annotation is required, the code should be refactored to isolate the software elements where the annotation applies.
 
-### Treat Acronyms as Words
+### 두문자어(acronym)을 일반 단어로 취급하라
 
-Treat acronyms and abbreviations as words in naming variables, methods, and classes. The names are much more readable:
+변수와 메소드, 클래스의 이름을 지을 때 두문자어와 약어(abbreviation)를 일반적인 단어로 취급하라. 더 가독성이 좋은 이름을 지을 수 있다.
 
-| Good           | Bad            |
+| 좋은 예          | 나쁜 예          |
 |----------------|----------------|
 | XmlHttpRequest | XMLHTTPRequest |
 | getCustomerId  | getCustomerID  |
@@ -406,21 +406,21 @@ Treat acronyms and abbreviations as words in naming variables, methods, and clas
 | String url     | String URL     |
 | long id        |                |
 
-Both the JDK and the Android code bases are very inconsistent with regards to acronyms, therefore, it is virtually impossible to be consistent with the code around you. Bite the bullet, and treat acronyms as words.
+JDK와 안드로이드 코드는 모두 이 두문자어와 관련된 문제에서 굉장히 일관적이지 못한 편이다. 따라서 사실상 당신이 접할 모든 코드에서 이 규칙을 지키는 것이 불가능하다. 그런 만큼, 어금니를 질끈 물고, 모든 두문자어를 일반 단어로 취급하자.
 
-### Use TODO Comments
+### `TODO` 주석을 사용하라
 
-Use TODO comments for code that is temporary, a short-term solution, or good-enough but not perfect.
+TODO 주석은 일시적이거나 단기적인 해결책, 완벽하진 않지만 우선은 괜찮은 코드 등에 사용할 수 있다.
 
-TODOs should include the string TODO in all caps, followed by a colon:
+TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라야 한다.
 
 	// TODO: Remove this code after the UrlTable2 has been checked in.
 
-and
+또 다른 예다.
 
 	// TODO: Change this to use a flag instead of a constant.
 
-If your TODO is of the form "At a future date do something" make sure that you either include a very specific date ("Fix by November 2005") or a very specific event ("Remove this code after all production mixers understand protocol V7.").
+"언제까지 어떤 것을 해야 한다"는 식으로 TODO를 작성할 경우 아주 자세한 일정이나("2005년 11월까지 수정") 자세한 할 일("모든 관계자들이 7버전의 프로토콜을 이해한 뒤에야 이 코드를 삭제")을 병기한다.
 
 ### Log Sparingly
 
