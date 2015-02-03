@@ -468,11 +468,11 @@ There is some code that still says `if (localLOGV)`. This is considered acceptab
 
 * *The golden rule of logging is that your logs may not unnecessarily push other logs out of the buffer, just as others may not push out yours.*
 
-### Be Consistent
+### 일관성을 유지하라
 
-Our parting thought: BE CONSISTENT. If you're editing code, take a few minutes to look at the code around you and determine its style. If they use spaces around their if clauses, you should too. If their comments have little boxes of stars around them, make your comments have little boxes of stars around them too.
+마지막으로, 항상 코드의 일관성을 유지하자. 코드를 수정할 일이 생긴다면 몇 분이라도 투자해 코드의 이곳저곳을 살펴보고 코드를 수정할 때 어떤 스타일을 사용할 것인지 결정하라. 어떤 코드가 `if`문 주변으로 스페이스를 사용했다면 당신도 그렇게 해야 한다. 그 코드의 주석이 별표로 만들어진 상자 안에 들어 있다면, 당신의 주석 또한 별표 상자 안에 작성하라.
 
-The point of having style guidelines is to have a common vocabulary of coding, so people can concentrate on what you're saying, rather than on how you're saying it. We present global style rules here so people know the vocabulary. But local style is also important. If code you add to a a file looks drastically different from the existing code around it, it throws readers out of their rhythm when they go to read it. Try to avoid this.
+스타일 가이드라인의 포인트는 코딩에 있어 공통적인 어휘를 사용함으로써 사람들이 당신이 어떻게 말하고 있는지보다 무엇을 말하고 있는지에 집중하게끔 하는 것이다. 이 전반적인 스타일 규칙으로 공통적으로 사용될 어휘를 제시했지만 특정한 경우의 스타일 또한 중요한 법이다. 새롭게 짜넣은 코드가 기존의 코드와 심하게 다른 스타일이라면 다른 사람들이 코드를 읽어내려가는데 적지 않은 불편을 겪게 될 것이다. 그런 상황을 되도록 피하자.
 
 ## 자바테스트 스타일 규칙
 
