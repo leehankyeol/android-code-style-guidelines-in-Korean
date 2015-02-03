@@ -59,7 +59,7 @@
 		}
 
 * 예외를 캐치한 뒤 새로운 런타임예외`RuntimeException`를 발생시킨다. 위험한 방법이므로 해당 에러가 발생했을 때
-올바른 처리 방법이 크래시(crash)라 확신이 있을 때만 사용하라.
+올바른 처리 방법이 크래시(crash)라는 확신이 있을 때만 사용하라.
 
 		/** Set port. If value is not a valid number, die. */
 
