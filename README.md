@@ -208,9 +208,9 @@ Decision: Use the latter for importing all Android code. An explicit exception i
 
 가능한 한도 내에서 메소드는 한 주제에 맞게 짧게 작성되어야 한다. 어떤 경우에는 긴 메소드를 작성하는 것이 옳기 때문에 메소드 길이에 정확히 정해진 제한은 없다. 한 메소드의 길이가 40줄을 넘어가게 되면 전체 프로그램의 구조를 해치지 않는 선에서 코드를 나눌 수 있는지 생각해보라.
 
-### Define Fields in Standard Places
+### 정해진 위치에 필드를 정의하라
 
-Fields should be defined either at the top of the file, or immediately before the methods that use them.
+필드는 파일의 상단이나, 그 필드를 사용하는 메소드 바로 직전에 정의되어야 한다.
 
 ### Limit Variable Scope
 
@@ -296,31 +296,31 @@ The use and location of static imports have been mildly controversial issues. So
 
 Since most people consider this a low priority issue, just use your judgement and please be consistent.
 
-### Use Spaces for Indentation
+### 들여쓰기에는 스페이스를 사용하라
 
-We use 4 space indents for blocks. We never use tabs. When in doubt, be consistent with code around you.
+블록 들여쓰기에는 4개의 스페이스를 사용한다. 탭은 사용하지 않는다. 어떻게 해야 할지 잘 모르겠다면 당신이 다루고 있는 코드가 기존에 유지하던 방식을 고수하라.
 
-We use 8 space indents for line wraps, including function calls and assignments. For example, this is correct:
+함수 호출이나 값을 할당할 때 등 줄바꿈을 할 때는 8개의 스페이스를 사용한다. 아래는 올바른 사용 예다.
 
 	Instrument i =
 	        someLongExpression(that, wouldNotFit, on, one, line);
 
-and this is not correct:
+그리고 아래는 잘못된 예다.
 
 	Instrument i =
 	    someLongExpression(that, wouldNotFit, on, one, line);
 
-### Follow Field Naming Conventions
+### 필드 네이밍 컨벤션을 따르라
 
-* Non-public, non-static field names start with m.
+* 퍼블릭이나 스태틱이 아닌 필드의 이름은 m으로 시작한다.
 
-* Static field names start with s.
+* 스태틱 필드 이름은 s로 시작한다.
 
-* Other fields start with a lower case letter.
+* 다른 필드는 소문자로 시작한다.
 
-* Public static final fields (constants) are ALL_CAPS_WITH_UNDERSCORES.
+* 퍼블릭 스태틱 필드(상수)는 모두 대문자에 언더스코어를 사용한다.
 
-For example:
+예:
 
 	public class MyClass {
 	    public static final int SOME_CONSTANT = 42;
@@ -331,9 +331,9 @@ For example:
 	    protected int mProtected;
 	}
 
-### Use Standard Brace Style
+### 정해진 중괄호 스타일을 사용하라
 
-Braces do not go on their own line; they go on the same line as the code before them. So:
+다음과 같이, 혼자서 한 줄을 차지하는 중괄호를 사용하지 말고 이전 줄의 코드에 붙여 사용하라.
 
 	class MyClass {
 	    int func() {
@@ -347,17 +347,17 @@ Braces do not go on their own line; they go on the same line as the code before 
 	    }
 	}
 
-We require braces around the statements for a conditional. Except, if the entire conditional (the condition and the body) fit on one line, you may (but are not obligated to) put it all on one line. That is, this is legal:
+조건문을 사용할 때는 중괄호를 사용하는 것이 원칙이다. 단, 조건문의 모든 내용이 한 줄로 기술이 가능하면, (의무는 아니지만) 한 줄에 쓰는 것도 가능하다. 아래는 가능한 예다.
 
 	if (condition) {
 	    body(); 
 	}
 
-and this is legal:
+아래의 예도 가능하다.
 
 	if (condition) body();
 
-but this is still illegal:
+하지만 아래의 예는 잘못되었다.
 
 	if (condition)
 	    body();  // bad!
