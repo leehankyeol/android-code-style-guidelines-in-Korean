@@ -123,7 +123,7 @@ Cons: there are no guarantees as to when a finalizer will be called, or even tha
 
 Decision: we don't use finalizers. In most cases, you can do what you need from a finalizer with good exception handling. If you absolutely need it, define a close() method (or the like) and document exactly when that method needs to be called. See InputStream for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs.
 
-Fully Qualify Imports
+### Fully Qualify Imports
 
 When you want to use class Bar from package foo,there are two possible ways to import it:
 
@@ -137,9 +137,9 @@ Pros: Makes it obvious what classes are actually used. Makes code more readable 
 
 Decision: Use the latter for importing all Android code. An explicit exception is made for java standard libraries (`java.util.*`, `java.io.*`, etc.) and unit test code (`junit.framework.*`)
 
-## Java Library Rules
+## 자바 라이브러리 규칙
 
-There are conventions for using Android's Java libraries and tools. In some cases, the convention has changed in important ways and older code might use a deprecated pattern or library. When working with such code, it's okay to continue the existing style. When creating new components never use deprecated libraries.
+안드로이드의 자바 라이브러리와 툴을 사용할 때에도 지켜야 할 컨벤션이 있다. 컨벤션의 핵심적인 사항이 바뀌어 이전의 코드가 더 이상 사용되지 않고 사라질(deprecated) 패턴이나 라이브러리를 사용할 때가 있다. 그렇게 짜여져 있는 코드를 다룰 때는 현재 유지되고 있는 스타일을 계속 사용하는 것도 괜찮으나 새로운 코드를 짤 때는 절대 사라질 라이브러리를 사용하지 말라.
 
 ## Java Style Rules
 
