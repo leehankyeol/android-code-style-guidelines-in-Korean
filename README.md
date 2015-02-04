@@ -264,37 +264,37 @@ Decision: we don't use finalizers. In most cases, you can do what you need from 
 	    doSomethingElse(i.next());
 	}
 
-### Order Import Statements
+### 임포트`import`문의 순서
 
-The ordering of import statements is:
+임포트문은 다음의 순서로 정렬한다.
 
-1. Android imports
+1. 안드로이드 임포트
 
-2. Imports from third parties (`com`, `junit`, `net`, `org`)
+2. 써드파티 임포트(`com`, `junit`, `net`, `org`)
 
-3. `java` and `javax`
+3. `java`와 `javax`
 
-To exactly match the IDE settings, the imports should be:
+IDE 설정과 정확히 맞추기 위한 순서는 다음과 같다:
 
-* Alphabetical within each grouping, with capital letters before lower case letters (e.g. Z before a).
+* 각각의 그룹 내에서는 알파벳순으로 정렬한다. 대문자가 소문자 앞에 온다. (즉 Z가 a보다 앞이다.)
 
-* There should be a blank line between each major grouping (`android`, `com`, `junit`, `net`, `org`, `java`, `javax`).
+* 주요 그룹은 한 줄 띄어준다. (`android`, `com`, `junit`, `net`, `org`, `java`, `javax`).
 
-Originally there was no style requirement on the ordering. This meant that the IDE's were either always changing the ordering, or IDE developers had to disable the automatic import management features and maintain the imports by hand. This was deemed bad. When java-style was asked, the preferred styles were all over the map. It pretty much came down to our needing to "pick an ordering and be consistent." So we chose a style, updated the style guide, and made the IDEs obey it. We expect that as IDE users work on the code, the imports in all of the packages will end up matching this pattern without any extra engineering effort.
+원래 임포트의 순서에는 정해진 스타일이 없었다. IDE가 자동적으로 임포트문의 순서를 바꾸거나, 아니면 개발자들이 자동 관리 옵션을 비활성화하고 손수 관리하는 방법밖에 없었다. 이런 방식이 썩 좋아보이지 않았다. 온갖 방식을 두고 자바만의 스타일을 정해보기로 했고 결국 "원칙을 정하고 일관성을 유지하자"는 기조에 맞춘 결정을 내렸다. 그래서 한 가지 스타일을 정하고, 스타일 가이드를 개선한 뒤 IDE에게 그 스타일을 따르게끔 했다. 별도의 노력없이 IDE 사용자들이 앞으로 코드를 짜나감에 따라 모든 패키지의 임포트문이 이 패턴에 맞춰지길 기대한다.
 
-This style was chosen such that:
+그렇게 정해진 스타일은 다음의 목적을 만족시키고자 했다:
 
-* The imports people want to look at first tend to be at the top (`android`)
+* 사람들이 먼저 보기 원하는 임포트는 상위에 위치한다. (예: `android`)
 
-* The imports people want to look at least tend to be at the bottom (`java`)
+* 그다지 볼 필요가 없는 임포트는 하단에 위치한다. (예: `java`)
 
-* Humans can easily follow the style
+* 사람들이 스타일을 쉽게 따를 수 있다.
 
-* IDEs can follow the style
+* 다양한 IDE도 스타일을 쉽게 따를 수 있다.
 
-The use and location of static imports have been mildly controversial issues. Some people would prefer static imports to be interspersed with the remaining imports, some would prefer them reside above or below all other imports. Additionally, we have not yet come up with a way to make all IDEs use the same ordering.
+스태틱 임포트의 위치는 다소 논란의 여지가 있었다. 여러 임포트 사이에 배치하자는 의견도 있었고 다른 임포트들의 최상단이나 최하단에 놓자는 의견도 있었다. 또한, 모든 IDE가 이 순서를 지키게 하는 방법도 아직 찾지 못했다.
 
-Since most people consider this a low priority issue, just use your judgement and please be consistent.
+많은 사람들이 그렇게 중요하게 생각하지 않는 문제인 만큼 알아서 판단하라. 일관성을 유지하는 것만 지키면 된다.
 
 ### 들여쓰기에는 스페이스를 사용하라
 
