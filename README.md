@@ -123,19 +123,19 @@ Cons: there are no guarantees as to when a finalizer will be called, or even tha
 
 Decision: we don't use finalizers. In most cases, you can do what you need from a finalizer with good exception handling. If you absolutely need it, define a close() method (or the like) and document exactly when that method needs to be called. See InputStream for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs.
 
-### Fully Qualify Imports
+### 임포트`import`는 끝까지 명시하라
 
-When you want to use class Bar from package foo,there are two possible ways to import it:
+패키지 `foo`의 클래스 `Bar`를 사용하고 싶다면 임포트를 할 때 두 가지 선택지가 있다.
 
 1. `import foo.*;`
 
-Pros: Potentially reduces the number of import statements.
+장점: 임포트 문의 수를 줄일 수 있다.
 
 2. `import foo.Bar;`
 
-Pros: Makes it obvious what classes are actually used. Makes code more readable for maintainers.
+장점: 정확히 어떤 클래스가 사용되는지 알 수 있다. 유지보수에 유리하다.
 
-Decision: Use the latter for importing all Android code. An explicit exception is made for java standard libraries (`java.util.*`, `java.io.*`, etc.) and unit test code (`junit.framework.*`)
+결론: 모든 안드로이드 프로젝트에서는 후자의 방법을 사용하라. 특별한 예외를 둔다면 자바 표준 라이브러리(`java.util.*`, `java.io.*`, etc.)나 유닛 테스트 코드(`junit.framework.*`) 정도다.
 
 ## 자바 라이브러리 규칙
 
