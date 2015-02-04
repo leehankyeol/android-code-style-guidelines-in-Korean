@@ -123,19 +123,19 @@ Cons: there are no guarantees as to when a finalizer will be called, or even tha
 
 Decision: we don't use finalizers. In most cases, you can do what you need from a finalizer with good exception handling. If you absolutely need it, define a close() method (or the like) and document exactly when that method needs to be called. See InputStream for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs.
 
-### Fully Qualify Imports
+### 임포트`import`는 끝까지 명시하라
 
-When you want to use class Bar from package foo,there are two possible ways to import it:
+패키지 `foo`의 클래스 `Bar`를 사용하고 싶다면 임포트를 할 때 두 가지 선택지가 있다.
 
 1. `import foo.*;`
 
-Pros: Potentially reduces the number of import statements.
+장점: 임포트 문의 수를 줄일 수 있다.
 
 2. `import foo.Bar;`
 
-Pros: Makes it obvious what classes are actually used. Makes code more readable for maintainers.
+장점: 정확히 어떤 클래스가 사용되는지 알 수 있다. 유지보수에 유리하다.
 
-Decision: Use the latter for importing all Android code. An explicit exception is made for java standard libraries (`java.util.*`, `java.io.*`, etc.) and unit test code (`junit.framework.*`)
+결론: 모든 안드로이드 프로젝트에서는 후자의 방법을 사용하라. 특별한 예외를 둔다면 자바 표준 라이브러리(`java.util.*`, `java.io.*`, etc.)나 유닛 테스트 코드(`junit.framework.*`) 정도다.
 
 ## 자바 라이브러리 규칙
 
@@ -212,13 +212,13 @@ Decision: Use the latter for importing all Android code. An explicit exception i
 
 필드는 파일의 상단이나, 그 필드를 사용하는 메소드 바로 직전에 정의되어야 한다.
 
-### Limit Variable Scope
+### 변수의 범위(scope)를 제한하라
 
-The scope of local variables should be kept to a minimum. By doing so, you increase the readability and maintainability of your code and reduce the likelihood of error. Each variable should be declared in the innermost block that encloses all uses of the variable.
+지역(local) 변수의 범위는 최소한으로 유지되어야 하는데 그럼으로써 코드의 가독성과 유지보수의 편이성이 높아질 뿐만 아니라 에러의 가능성도 낮출 수 있기 때문이다. 모든 변수는 그 변수가 사용되는 것을 모두 감쌀 수 있는 가장 안쪽의 블록에서 선언되어야 한다.
 
-Local variables should be declared at the point they are first used. Nearly every local variable declaration should contain an initializer. If you don't yet have enough information to initialize a variable sensibly, you should postpone the declaration until you do.
+지역 변수는 처음 사용되는 시점에 선언되어야 한다. 거의 모든 지역 변수의 선언은 초기화가 동반되는 것이 옳다. 변수를 선언하는 시점에서 어떤 값으로 초기화할지 충분한 정보가 없다면 그런 정보가 주어지는 시점까지 변수의 선언을 미뤄야 한다.
 
-One exception to this rule concerns try-catch statements. If a variable is initialized with the return value of a method that throws a checked exception, it must be initialized inside a try block. If the value must be used outside of the try block, then it must be declared before the try block, where it cannot yet be sensibly initialized:
+이 규칙에 한 가지 예외가 있다면 트라이`try`-캐치`catch` 문을 사용할 때다. 만약 어떤 변수가 예외 처리되는 메소드의 반환값으로 초기화될 경우 트라이 블록 안에서 초기화되어야 할 것이다. 만약 다음 예와 같이 그 변수가 트라이 블록 바깥에서 사용되어야 한다면 해당 변수는 트라이 블록 이전에 초기화 없이 선언될 수 있다.
 
 	// Instantiate class cl, which represents some sort of Set 
 	Set s = null;
@@ -233,7 +233,7 @@ One exception to this rule concerns try-catch statements. If a variable is initi
 	// Exercise the set 
 	s.addAll(Arrays.asList(args));
 
-But even this case can be avoided by encapsulating the try-catch block in a method:
+하지만 이런 경우에도 트라이-캐치 블록 자체를 메소드에 인캡슐레이션함으로써 변수를 미리 선언하는 것을 피할 수 있다.
 
 	Set createSet(Class cl) {
 	    // Instantiate class cl, which represents some sort of Set 
@@ -252,49 +252,49 @@ But even this case can be avoided by encapsulating the try-catch block in a meth
 	Set s = createSet(cl);
 	s.addAll(Arrays.asList(args));
 
-Loop variables should be declared in the for statement itself unless there is a compelling reason to do otherwise:
+반복문에 사용되는 변수는 꼭 그러지 말아야 할 이유가 없는 한 반복문 내부에서 선언되어야 한다.
 
 	for (int i = 0; i < n; i++) {
 	    doSomething(i);
 	}
 
-and
+같은 예다.
 
 	for (Iterator i = c.iterator(); i.hasNext(); ) {
 	    doSomethingElse(i.next());
 	}
 
-### Order Import Statements
+### 임포트`import`문의 순서
 
-The ordering of import statements is:
+임포트문은 다음의 순서로 정렬한다.
 
-1. Android imports
+1. 안드로이드 임포트
 
-2. Imports from third parties (`com`, `junit`, `net`, `org`)
+2. 써드파티 임포트(`com`, `junit`, `net`, `org`)
 
-3. `java` and `javax`
+3. `java`와 `javax`
 
-To exactly match the IDE settings, the imports should be:
+IDE 설정과 정확히 맞추기 위한 순서는 다음과 같다:
 
-* Alphabetical within each grouping, with capital letters before lower case letters (e.g. Z before a).
+* 각각의 그룹 내에서는 알파벳순으로 정렬한다. 대문자가 소문자 앞에 온다. (즉 Z가 a보다 앞이다.)
 
-* There should be a blank line between each major grouping (`android`, `com`, `junit`, `net`, `org`, `java`, `javax`).
+* 주요 그룹은 한 줄 띄어준다. (`android`, `com`, `junit`, `net`, `org`, `java`, `javax`).
 
-Originally there was no style requirement on the ordering. This meant that the IDE's were either always changing the ordering, or IDE developers had to disable the automatic import management features and maintain the imports by hand. This was deemed bad. When java-style was asked, the preferred styles were all over the map. It pretty much came down to our needing to "pick an ordering and be consistent." So we chose a style, updated the style guide, and made the IDEs obey it. We expect that as IDE users work on the code, the imports in all of the packages will end up matching this pattern without any extra engineering effort.
+원래 임포트의 순서에는 정해진 스타일이 없었다. IDE가 자동적으로 임포트문의 순서를 바꾸거나, 아니면 개발자들이 자동 관리 옵션을 비활성화하고 손수 관리하는 방법밖에 없었다. 이런 방식이 썩 좋아보이지 않았다. 온갖 방식을 두고 자바만의 스타일을 정해보기로 했고 결국 "원칙을 정하고 일관성을 유지하자"는 기조에 맞춘 결정을 내렸다. 그래서 한 가지 스타일을 정하고, 스타일 가이드를 개선한 뒤 IDE에게 그 스타일을 따르게끔 했다. 별도의 노력없이 IDE 사용자들이 앞으로 코드를 짜나감에 따라 모든 패키지의 임포트문이 이 패턴에 맞춰지길 기대한다.
 
-This style was chosen such that:
+그렇게 정해진 스타일은 다음의 목적을 만족시키고자 했다:
 
-* The imports people want to look at first tend to be at the top (`android`)
+* 사람들이 먼저 보기 원하는 임포트는 상위에 위치한다. (예: `android`)
 
-* The imports people want to look at least tend to be at the bottom (`java`)
+* 그다지 볼 필요가 없는 임포트는 하단에 위치한다. (예: `java`)
 
-* Humans can easily follow the style
+* 사람들이 스타일을 쉽게 따를 수 있다.
 
-* IDEs can follow the style
+* 다양한 IDE도 스타일을 쉽게 따를 수 있다.
 
-The use and location of static imports have been mildly controversial issues. Some people would prefer static imports to be interspersed with the remaining imports, some would prefer them reside above or below all other imports. Additionally, we have not yet come up with a way to make all IDEs use the same ordering.
+스태틱 임포트의 위치는 다소 논란의 여지가 있었다. 여러 임포트 사이에 배치하자는 의견도 있었고 다른 임포트들의 최상단이나 최하단에 놓자는 의견도 있었다. 또한, 모든 IDE가 이 순서를 지키게 하는 방법도 아직 찾지 못했다.
 
-Since most people consider this a low priority issue, just use your judgement and please be consistent.
+많은 사람들이 그렇게 중요하게 생각하지 않는 문제인 만큼 알아서 판단하라. 일관성을 유지하는 것만 지키면 된다.
 
 ### 들여쓰기에는 스페이스를 사용하라
 
