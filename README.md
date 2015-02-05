@@ -13,11 +13,13 @@
 
 코드를 짜다 보면 때로는 아래처럼 예외를 완전히 무시하고 싶어질 때가 있을 것이다.
 
-	void setServerPort(String value) {
-	    try {
-	        serverPort = Integer.parseInt(value);
-	    } catch (NumberFormatException e) { }
-	}
+```java
+void setServerPort(String value) {
+    try {
+        serverPort = Integer.parseInt(value);
+    } catch (NumberFormatException e) { }
+}
+```
 
 절대 이런 식으로 코드를 짜서는 안 된다. 당신의 코드가 절대로 오류가 발생할 조건을 만족하지 않을 거라고,
 또는 발생하는 에러를 처리하는 것이 중요하지 않다고 생각할 수도 있으나 위의 예제와 같이 예외를 무시하는 것은
@@ -26,78 +28,90 @@
 
 > 누구든 비어 있는 캐치`catch` 구문을 만들 때는 뭔가 섬뜩한 기분이 들어야 한다. 물론 그렇게 하는 것이 옳은
 > 때가 분명히 있지만, 적어도 다시 한 번 생각해볼 필요가 있다. 자바를 짤 때는 그 섬뜩한 기분을 무시해선 안 된다.
-> - [제임스 고슬링](https://source.android.com/source/code-style.html#java-language-rules)
+> [제임스 고슬링](https://source.android.com/source/code-style.html#java-language-rules)
 
 허용할 만한 대안들은 아래와 같다. 목록의 위에 있을수록 선호도가 높은 방법이다.
 
 * 예외를 해당 메소드의 콜러(caller)에 발생시킨다.
 
-		void setServerPort(String value) throws NumberFormatException {
-		    serverPort = Integer.parseInt(value);
-		}
+	```java
+	void setServerPort(String value) throws NumberFormatException {
+	    serverPort = Integer.parseInt(value);
+	}
+	```
 
 * 추상(abstraction) 정도에 맞는 새로운 예외를 발생시킨다.
 
-		void setServerPort(String value) throws ConfigurationException {
-		    try {
-		        serverPort = Integer.parseInt(value);
-		    } catch (NumberFormatException e) {
-		        throw new ConfigurationException("Port " + value + " is not valid.");
-		    }
-		}
+	```java
+	void setServerPort(String value) throws ConfigurationException {
+	    try {
+	        serverPort = Integer.parseInt(value);
+	    } catch (NumberFormatException e) {
+	        throw new ConfigurationException("Port " + value + " is not valid.");
+	    }
+	}
+	```
 
 * 캐치 블록 안에서 적당한 값으로 대체한다.
 
-		/** Set port. If value is not a valid number, 80 is substituted. */
+	```java
+	/** Set port. If value is not a valid number, 80 is substituted. */
 
-		void setServerPort(String value) {
-		    try {
-		        serverPort = Integer.parseInt(value);
-		    } catch (NumberFormatException e) {
-		        serverPort = 80;  // default port for server 
-		    }
-		}
+	void setServerPort(String value) {
+	    try {
+	        serverPort = Integer.parseInt(value);
+	    } catch (NumberFormatException e) {
+	        serverPort = 80;  // default port for server 
+	    }
+	}
+	```
 
 * 예외를 캐치한 뒤 새로운 런타임예외`RuntimeException`를 발생시킨다. 위험한 방법이므로 해당 에러가 발생했을 때
 올바른 처리 방법이 크래시(crash)라 확신이 있을 때만 사용하라.
 
-		/** Set port. If value is not a valid number, die. */
+	```java
+	/** Set port. If value is not a valid number, die. */
 
-		void setServerPort(String value) {
-		    try {
-		        serverPort = Integer.parseInt(value);
-		    } catch (NumberFormatException e) {
-		        throw new RuntimeException("port " + value " is invalid, ", e);
-		    }
-		}
+	void setServerPort(String value) {
+	    try {
+	        serverPort = Integer.parseInt(value);
+	    } catch (NumberFormatException e) {
+	        throw new RuntimeException("port " + value " is invalid, ", e);
+	    }
+	}
+	```
 
 컨스트럭터(constructor)에게 런타임예외로 전해질 때 원래 발생한 예외가 같이 전달되는 것에 주목하자.
 자바 1.3 미만의 버전에서 컴파일을 해야 한다면 원인이 되는 예외를 코드에서 제외해야 할 것이다.
 
 * 최후의 보루: 예외를 무시하는 것이 올바르다고 확신이 든다면 그렇게 해도 좋다. 다만 합당한 이유를 꼭 코멘트로 남기자.
 
-		/** If value is not a valid number, original port number is used. */
-		void setServerPort(String value) {
-		    try {
-		        serverPort = Integer.parseInt(value);
-		    } catch (NumberFormatException e) {
-		        // Method is documented to just ignore invalid user input.
-		        // serverPort will just be unchanged.
-		    }
-		}
+	```java
+	/** If value is not a valid number, original port number is used. */
+	void setServerPort(String value) {
+	    try {
+	        serverPort = Integer.parseInt(value);
+	    } catch (NumberFormatException e) {
+	        // Method is documented to just ignore invalid user input.
+	        // serverPort will just be unchanged.
+	    }
+	}
+	```
 
 ### 일반적 예외(generic exception)를 캐치하지 마라
 
 우리는 종종 예외를 잡아내는 것에 게을러져 아래와 같은 코드를 짜고 싶을 때가 있다.
 
-	try {
-	    someComplicatedIOFunction();        // may throw IOException 
-	    someComplicatedParsingFunction();   // may throw ParsingException 
-	    someComplicatedSecurityFunction();  // may throw SecurityException 
-	    // phew, made it all the way 
-	} catch (Exception e) {                 // I'll just catch all exceptions 
-	    handleError();                      // with one generic handler!
-	}
+```java
+try {
+    someComplicatedIOFunction();        // may throw IOException 
+    someComplicatedParsingFunction();   // may throw ParsingException 
+    someComplicatedSecurityFunction();  // may throw SecurityException 
+    // phew, made it all the way 
+} catch (Exception e) {                 // I'll just catch all exceptions 
+    handleError();                      // with one generic handler!
+}
+```
 
 You should not do this. In almost all cases it is inappropriate to catch generic Exception or Throwable, preferably not Throwable, because it includes Error exceptions as well. It is very dangerous. It means that Exceptions you never expected (including RuntimeExceptions like ClassCastException) end up getting caught in application-level error handling. It obscures the failure handling properties of your code. It means if someone adds a new type of Exception in the code you're calling, the compiler won't help you realize you need to handle that error differently. And in most cases you shouldn't be handling different types of exception the same way, anyway.
 
@@ -147,56 +161,62 @@ Decision: we don't use finalizers. In most cases, you can do what you need from 
 
 모든 파일은 저작권에 대한 기술로 시작해야 한다. 그 뒤로 패키지와 임포트`import`에 관한 문구가 이어지는데 각 블록은 한 줄을 띄운다. 그 아래로 클래스와 인터페이스를 선언한다. 자바독 주석에는 각 클래스와 인터페이스가 무엇을 하는지를 기술하라.
 
-	/*
-	 * Copyright (C) 2013 The Android Open Source Project 
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at 
-	 *
-	 *      http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software 
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and 
-	 * limitations under the License.
-	 */
+```java
+/*
+ * Copyright (C) 2013 The Android Open Source Project 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
 
-	package com.android.internal.foo;
+package com.android.internal.foo;
 
-	import android.os.Blah;
-	import android.view.Yada;
+import android.os.Blah;
+import android.view.Yada;
 
-	import java.sql.ResultSet;
-	import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-	/**
-	 * Does X and Y and provides an abstraction for Z.
-	 */
+/**
+ * Does X and Y and provides an abstraction for Z.
+ */
 
-	public class Foo {
-	    ...
-	}
+public class Foo {
+    ...
+}
+```
 
 당신이 만든 모든 클래스와 이름으로 봤을 때 기능이 자명하지 않은(nontrivial) 퍼블릭 메소드에는 각 클래스와 메소드가 무슨 일을 하는지 적어도 한 줄 이상의 자바독 주석을 달자. 이 때 각 주석문은 3인칭 단수형 동사로 시작해야 한다.
 
 예:
 
-	/** Returns the correctly rounded positive square root of a double value. */
-	static double sqrt(double a) {
-	    ...
-	}
+```java
+/** Returns the correctly rounded positive square root of a double value. */
+static double sqrt(double a) {
+    ...
+}
+```
 
 또는
 
-	/**
-	 * Constructs a new String by converting the specified array of 
-	 * bytes using the platform's default character encoding.
-	 */
-	public String(byte[] bytes) {
-	    ...
-	}
+```java
+/**
+ * Constructs a new String by converting the specified array of 
+ * bytes using the platform's default character encoding.
+ */
+public String(byte[] bytes) {
+    ...
+}
+```
 
 주석의 내용이 단지 "Foo를 설정한다(sets Foo)" 등 자명한 이름의 겟(get)과 셋(set) 메소드에는 자바독 주석을 달 필요가 없다. 하지만 해당 메소드가 조금 더 복잡한 일, 예를 들어 제약 조건을 강화한다거나 중대한 부작용을 야기할 수 있는 경우엔 꼭 문서화를 해야 한다. 또한 "Foo"라는 속성이 의미하는 바가 자명하지 않을 경우에도 문서화가 필요하다.
 
@@ -220,49 +240,57 @@ Decision: we don't use finalizers. In most cases, you can do what you need from 
 
 이 규칙에 한 가지 예외가 있다면 트라이`try`-캐치`catch` 문을 사용할 때다. 만약 어떤 변수가 예외 처리되는 메소드의 반환값으로 초기화될 경우 트라이 블록 안에서 초기화되어야 할 것이다. 만약 다음 예와 같이 그 변수가 트라이 블록 바깥에서 사용되어야 한다면 해당 변수는 트라이 블록 이전에 초기화 없이 선언될 수 있다.
 
-	// Instantiate class cl, which represents some sort of Set 
-	Set s = null;
-	try {
-	    s = (Set) cl.newInstance();
-	} catch(IllegalAccessException e) {
-	    throw new IllegalArgumentException(cl + " not accessible");
-	} catch(InstantiationException e) {
-	    throw new IllegalArgumentException(cl + " not instantiable");
-	}
+```java
+// Instantiate class cl, which represents some sort of Set 
+Set s = null;
+try {
+    s = (Set) cl.newInstance();
+} catch(IllegalAccessException e) {
+    throw new IllegalArgumentException(cl + " not accessible");
+} catch(InstantiationException e) {
+    throw new IllegalArgumentException(cl + " not instantiable");
+}
 
-	// Exercise the set 
-	s.addAll(Arrays.asList(args));
+// Exercise the set 
+s.addAll(Arrays.asList(args));
+```
 
 하지만 이런 경우에도 트라이-캐치 블록 자체를 메소드에 인캡슐레이션함으로써 변수를 미리 선언하는 것을 피할 수 있다.
 
-	Set createSet(Class cl) {
-	    // Instantiate class cl, which represents some sort of Set 
-	    try {
-	        return (Set) cl.newInstance();
-	    } catch(IllegalAccessException e) {
-	        throw new IllegalArgumentException(cl + " not accessible");
-	    } catch(InstantiationException e) {
-	        throw new IllegalArgumentException(cl + " not instantiable");
-	    }
-	}
+```java
+Set createSet(Class cl) {
+    // Instantiate class cl, which represents some sort of Set 
+    try {
+        return (Set) cl.newInstance();
+    } catch(IllegalAccessException e) {
+        throw new IllegalArgumentException(cl + " not accessible");
+    } catch(InstantiationException e) {
+        throw new IllegalArgumentException(cl + " not instantiable");
+    }
+}
 
-	...
+...
 
-	// Exercise the set 
-	Set s = createSet(cl);
-	s.addAll(Arrays.asList(args));
+// Exercise the set 
+Set s = createSet(cl);
+s.addAll(Arrays.asList(args));
+```
 
 반복문에 사용되는 변수는 꼭 그러지 말아야 할 이유가 없는 한 반복문 내부에서 선언되어야 한다.
 
-	for (int i = 0; i < n; i++) {
-	    doSomething(i);
-	}
+```java
+for (int i = 0; i < n; i++) {
+    doSomething(i);
+}
+```
 
 같은 예다.
 
-	for (Iterator i = c.iterator(); i.hasNext(); ) {
-	    doSomethingElse(i.next());
-	}
+```java
+for (Iterator i = c.iterator(); i.hasNext(); ) {
+    doSomethingElse(i.next());
+}
+```
 
 ### 임포트`import`문의 순서
 
@@ -302,13 +330,17 @@ IDE 설정과 정확히 맞추기 위한 순서는 다음과 같다:
 
 함수 호출이나 값을 할당할 때 등 줄바꿈을 할 때는 8개의 스페이스를 사용한다. 아래는 올바른 사용 예다.
 
-	Instrument i =
-	        someLongExpression(that, wouldNotFit, on, one, line);
+```java
+Instrument i =
+        someLongExpression(that, wouldNotFit, on, one, line);
+```
 
 그리고 아래는 잘못된 예다.
 
-	Instrument i =
-	    someLongExpression(that, wouldNotFit, on, one, line);
+```java
+Instrument i =
+    someLongExpression(that, wouldNotFit, on, one, line);
+```
 
 ### 필드 네이밍 컨벤션을 따르라
 
@@ -322,45 +354,55 @@ IDE 설정과 정확히 맞추기 위한 순서는 다음과 같다:
 
 예:
 
-	public class MyClass {
-	    public static final int SOME_CONSTANT = 42;
-	    public int publicField;
-	    private static MyClass sSingleton;
-	    int mPackagePrivate;
-	    private int mPrivate;
-	    protected int mProtected;
-	}
+```java
+public class MyClass {
+    public static final int SOME_CONSTANT = 42;
+    public int publicField;
+    private static MyClass sSingleton;
+    int mPackagePrivate;
+    private int mPrivate;
+    protected int mProtected;
+}
+```
 
 ### 정해진 중괄호 스타일을 사용하라
 
 다음과 같이, 혼자서 한 줄을 차지하는 중괄호를 사용하지 말고 이전 줄의 코드에 붙여 사용하라.
 
-	class MyClass {
-	    int func() {
-	        if (something) {
-	            // ...
-	        } else if (somethingElse) {
-	            // ...
-	        } else {
-	            // ...
-	        }
-	    }
-	}
+```java
+class MyClass {
+    int func() {
+        if (something) {
+            // ...
+        } else if (somethingElse) {
+            // ...
+        } else {
+            // ...
+        }
+    }
+}
+```
 
 조건문을 사용할 때는 중괄호를 사용하는 것이 원칙이다. 단, 조건문의 모든 내용이 한 줄로 기술이 가능하면, (의무는 아니지만) 한 줄에 쓰는 것도 가능하다. 아래는 가능한 예다.
 
-	if (condition) {
-	    body(); 
-	}
+```java
+if (condition) {
+    body(); 
+}
+```
 
 아래의 예도 가능하다.
 
-	if (condition) body();
+```java
+if (condition) body();
+```
 
 하지만 아래의 예는 잘못되었다.
 
-	if (condition)
-	    body();  // bad!
+```java
+if (condition)
+    body();  // bad!
+```
 
 ### 행 길이를 제한하라
 
@@ -388,9 +430,11 @@ For example, if you use the @inheritdocs Javadoc tag, and derive from a class (n
 * `@SuppressWarnings`: The @SuppressWarnings annotation should only be used under circumstances where it is impossible to eliminate a warning. If a warning passes this "impossible to eliminate" test, the @SuppressWarnings annotation must be used, so as to ensure that all warnings reflect actual problems in the code.
 When a @SuppressWarnings annotation is necessary, it must be prefixed with a TODO comment that explains the "impossible to eliminate" condition. This will normally identify an offending class that has an awkward interface. For example:
 
-	// TODO: The third-party class com.third.useful.Utility.rotate() needs generics 
-	@SuppressWarnings("generic-cast")
-	List<String> blix = Utility.rotate(blax);
+```java
+// TODO: The third-party class com.third.useful.Utility.rotate() needs generics 
+@SuppressWarnings("generic-cast")
+List<String> blix = Utility.rotate(blax);
+```
 
 When a @SuppressWarnings annotation is required, the code should be refactored to isolate the software elements where the annotation applies.
 
@@ -404,7 +448,7 @@ When a @SuppressWarnings annotation is required, the code should be refactored t
 | getCustomerId  | getCustomerID  |
 | class Html     | class HTML     |
 | String url     | String URL     |
-| long id        |                |
+| long id        | long ID        |
 
 JDK와 안드로이드 코드는 모두 이 두문자어와 관련된 문제에서 굉장히 일관적이지 못한 편이다. 따라서 사실상 당신이 접할 모든 코드에서 이 규칙을 지키는 것이 불가능하다. 그런 만큼, 어금니를 질끈 물고, 모든 두문자어를 일반 단어로 취급하자.
 
@@ -414,11 +458,15 @@ TODO 주석은 일시적이거나 단기적인 해결책, 완벽하진 않지만
 
 TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라야 한다.
 
-	// TODO: Remove this code after the UrlTable2 has been checked in.
+```java
+// TODO: Remove this code after the UrlTable2 has been checked in.
+```
 
 또 다른 예다.
 
-	// TODO: Change this to use a flag instead of a constant.
+```java
+// TODO: Change this to use a flag instead of a constant.
+```
 
 "언제까지 어떤 것을 해야 한다"는 식으로 TODO를 작성할 경우 아주 자세한 일정이나("2005년 11월까지 수정") 자세한 할 일("모든 관계자들이 7버전의 프로토콜을 이해한 뒤에야 이 코드를 삭제")을 병기한다.
 
@@ -482,10 +530,12 @@ There is some code that still says `if (localLOGV)`. This is considered acceptab
 
 예: 
 
-	testMethod_specificCase1 testMethod_specificCase2
+```java
+testMethod_specificCase1 testMethod_specificCase2
 
-	void testIsDistinguishable_protanopia() {
-	    ColorMatcher colorMatcher = new ColorMatcher(PROTANOPIA)
-	    assertFalse(colorMatcher.isDistinguishable(Color.RED, Color.BLACK))
-	    assertTrue(colorMatcher.isDistinguishable(Color.X, Color.Y))
-	}
+void testIsDistinguishable_protanopia() {
+    ColorMatcher colorMatcher = new ColorMatcher(PROTANOPIA)
+    assertFalse(colorMatcher.isDistinguishable(Color.RED, Color.BLACK))
+    assertTrue(colorMatcher.isDistinguishable(Color.X, Color.Y))
+}
+```
