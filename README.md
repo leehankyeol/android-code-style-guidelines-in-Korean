@@ -414,7 +414,7 @@ if (condition)
 
 예외: 임포트`import` 구문의 경우 사람이 직접 코드를 읽는 경우가 적기 때문에 100글자 이상의 코드를 허용한다. This also simplifies tool writing.
 
-### Use Standard Java Annotations
+### 자바 표준 주석(annotation)을 사용하라
 
 Annotations should precede other modifiers for the same language element. Simple marker annotations (e.g. @Override) can be listed on the same line with the language element. If there are multiple annotations, or parameterized annotations, they should each be listed one-per-line in alphabetical order.<
 
@@ -422,7 +422,6 @@ Android standard practices for the three predefined annotations in Java are:
 
 * `@Deprecated`: The @Deprecated annotation must be used whenever the use of the annotated element is discouraged. If you use the @Deprecated annotation, you must also have a @deprecated Javadoc tag and it should name an alternate implementation. In addition, remember that a @Deprecated method is still supposed to work.
 If you see old code that has a @deprecated Javadoc tag, please add the @Deprecated annotation.
-
 
 * `@Override`: The @Override annotation must be used whenever a method overrides the declaration or implementation from a super-class.
 For example, if you use the @inheritdocs Javadoc tag, and derive from a class (not an interface), you must also annotate that the method @Overrides the parent class's method.
@@ -470,9 +469,9 @@ TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라
 
 "언제까지 어떤 것을 해야 한다"는 식으로 TODO를 작성할 경우 아주 자세한 일정이나("2005년 11월까지 수정") 자세한 할 일("모든 관계자들이 7버전의 프로토콜을 이해한 뒤에야 이 코드를 삭제")을 병기한다.
 
-### Log Sparingly
+### 로그는 아껴 써라
 
-While logging is necessary, it has a significantly negative impact on performance and quickly loses its usefulness if it's not kept reasonably terse. The logging facilities provides five different levels of logging:
+로그는 필수적인 작업이지만 짜임새있게 코딩하지 않으면 성능에 부정적인 영향을 주고 그 순기능을 쉽게 잃어버리게 된다. 자바의 로그 퍼실리티(log facility)는 5단계의 로그를 지원한다.
 
 * `ERROR`: This level of logging should be used when something fatal has happened, i.e. something that will have user-visible consequences and won't be recoverable without explicitly deleting some data, uninstalling applications, wiping the data partitions or reflashing the entire phone (or worse). This level is always logged. Issues that justify some logging at the ERROR level are typically good candidates to be reported to a statistics-gathering server.
 
@@ -486,9 +485,9 @@ There is some code that still says `if (localLOGV)`. This is considered acceptab
 
 * `VERBOSE`: This level of logging should be used for everything else. This level will only be logged on debug builds and should be surrounded by an `if (LOCAL_LOGV)` block (or equivalent) so that it can be compiled out by default. Any string building will be stripped out of release builds and needs to appear inside the `if (LOCAL_LOGV)` block.
 
-*Notes*:
+*노트*:
 
-* Within a given module, other than at the VERBOSE level, an error should only be reported once if possible: within a single chain of function calls within a module, only the innermost function should return the error, and callers in the same module should only add some logging if that significantly helps to isolate the issue.
+* 하나의 모듈 안에서는 VERBOSE 단계가 아닌 이상 가능한 한 하나의 에러는 단 한 번만 보고되어야 한다. : within a single chain of function calls within a module, only the innermost function should return the error, and callers in the same module should only add some logging if that significantly helps to isolate the issue.
 
 * In a chain of modules, other than at the VERBOSE level, when a lower-level module detects invalid data coming from a higher-level module, the lower-level module should only log this situation to the DEBUG log, and only if logging provides information that is not otherwise available to the caller. Specifically, there is no need to log situations where an exception is thrown (the exception should contain all the relevant information), or where the only information being logged is contained in an error code. This is especially important in the interaction between the framework and applications, and conditions caused by third-party applications that are properly handled by the framework should not trigger logging higher than the DEBUG level. The only situations that should trigger logging at the INFORMATIVE level or higher is when a module or application detects an error at its own level or coming from a lower level.
 
