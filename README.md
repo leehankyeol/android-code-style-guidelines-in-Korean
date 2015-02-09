@@ -477,7 +477,7 @@ TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라
 
 * `WARNING`: 심각하거나 예상하지 못한 일이 발생했을 때, 즉 사용자에게 가시적인 결과가 있지만 별도의 액션과(좀 기다리거나 앱을 재시작하거나 새 버전으로 업그레이드하거나 기기를 재시작하는 정도) 데이터의 손실이 없이 복구가 가능한 상황 등에 사용되는 로그 단계다. 이 단계의 로그 또한 어느 상황에서든 필수적이며 통계 서버에 보고를 고려해볼 만한 대상이다.
 
-* `INFORMATIVE`: 꼭 에러까지는 아니더라도 효과가 다방면으로 퍼지는 상황처럼 많은 수의 사람들이 주지하고 있어야 하는 상황에 사용되는 로그 단계다. 다른 모듈에 의한 중복 로그를 방지하기 위해, 이 단계의 로그는 해당 영역에서 로그를 하기에 가장 적절하다고 판단되는(most authoritative) 모듈에 의해 작성되는 것이 좋다. 마찬가지로 항상 작성되어야 하는 로그다.
+* `INFORMATIVE`: 꼭 에러까지는 아니더라도 효과가 다방면으로 퍼지는 상황처럼 많은 수의 사람들이 주지하고 있어야 하는 상황에 사용되는 로그 단계다. 다른 모듈에 의한 중복 로그를 방지하기 위해, 이 단계의 로그는 해당 영역에서 로그를 하기에 가장 적절한 권한을 가지는(most authoritative) 모듈에 의해 작성되는 것이 좋다. 마찬가지로 항상 작성되어야 하는 로그다.
 
 * `DEBUG`: This level of logging should be used to further note what is happening on the device that could be relevant to investigate and debug unexpected behaviors. You should log only what is needed to gather enough information about what is going on about your component. If your debug logs are dominating the log then you probably should be using verbose logging.
 This level will be logged, even on release builds, and is required to be surrounded by an `if (LOCAL_LOG)` or `if (LOCAL_LOGD)` block, where `LOCAL_LOG[D]` is defined in your class or subcomponent, so that there can exist a possibility to disable all such logging. There must therefore be no active logic in an `if (LOCAL_LOG)` block. All the string building for the log also needs to be placed inside the `if (LOCAL_LOG)` block. The logging call should not be re-factored out into a method call if it is going to cause the string building to take place outside of the if `(LOCAL_LOG)` block.
