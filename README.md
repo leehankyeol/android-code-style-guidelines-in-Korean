@@ -414,7 +414,7 @@ if (condition)
 
 예외: 임포트`import` 구문의 경우 사람이 직접 코드를 읽는 경우가 적기 때문에 100글자 이상의 코드를 허용한다. This also simplifies tool writing.
 
-### Use Standard Java Annotations
+### 자바 표준 주석(annotation)을 사용하라
 
 Annotations should precede other modifiers for the same language element. Simple marker annotations (e.g. @Override) can be listed on the same line with the language element. If there are multiple annotations, or parameterized annotations, they should each be listed one-per-line in alphabetical order.<
 
@@ -422,7 +422,6 @@ Android standard practices for the three predefined annotations in Java are:
 
 * `@Deprecated`: The @Deprecated annotation must be used whenever the use of the annotated element is discouraged. If you use the @Deprecated annotation, you must also have a @deprecated Javadoc tag and it should name an alternate implementation. In addition, remember that a @Deprecated method is still supposed to work.
 If you see old code that has a @deprecated Javadoc tag, please add the @Deprecated annotation.
-
 
 * `@Override`: The @Override annotation must be used whenever a method overrides the declaration or implementation from a super-class.
 For example, if you use the @inheritdocs Javadoc tag, and derive from a class (not an interface), you must also annotate that the method @Overrides the parent class's method.
@@ -470,9 +469,9 @@ TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라
 
 "언제까지 어떤 것을 해야 한다"는 식으로 TODO를 작성할 경우 아주 자세한 일정이나("2005년 11월까지 수정") 자세한 할 일("모든 관계자들이 7버전의 프로토콜을 이해한 뒤에야 이 코드를 삭제")을 병기한다.
 
-### Log Sparingly
+### 로그는 아껴 써라
 
-While logging is necessary, it has a significantly negative impact on performance and quickly loses its usefulness if it's not kept reasonably terse. The logging facilities provides five different levels of logging:
+로그는 필수적인 작업이지만 짜임새있게 코딩하지 않으면 성능에 부정적인 영향을 주고 그 순기능을 쉽게 잃어버리게 된다. 자바의 로그 퍼실리티(log facility)는 5단계의 로그를 지원한다.
 
 * `ERROR`: This level of logging should be used when something fatal has happened, i.e. something that will have user-visible consequences and won't be recoverable without explicitly deleting some data, uninstalling applications, wiping the data partitions or reflashing the entire phone (or worse). This level is always logged. Issues that justify some logging at the ERROR level are typically good candidates to be reported to a statistics-gathering server.
 
@@ -486,35 +485,35 @@ There is some code that still says `if (localLOGV)`. This is considered acceptab
 
 * `VERBOSE`: This level of logging should be used for everything else. This level will only be logged on debug builds and should be surrounded by an `if (LOCAL_LOGV)` block (or equivalent) so that it can be compiled out by default. Any string building will be stripped out of release builds and needs to appear inside the `if (LOCAL_LOGV)` block.
 
-*Notes*:
+*노트*:
 
-* Within a given module, other than at the VERBOSE level, an error should only be reported once if possible: within a single chain of function calls within a module, only the innermost function should return the error, and callers in the same module should only add some logging if that significantly helps to isolate the issue.
+* 하나의 모듈 안에서는 VERBOSE 단계가 아닌 이상 가능한 한 하나의 에러는 단 한 번만 보고되어야 한다. 한 모듈 내부에서 일련의 함수 호출 과정 안에서는 가장 내부에 위치하는 함수만이 에러를 반환해야 하고 그 함수를 호출하는 동일 모듈 내의 다른 부분에서는, 그렇게 하는 것이 문제를 고립하는데 충분한 도움이 되는 경우에만, 필요한 로그를 덧붙이는 형식이 되어야 한다.
 
 * In a chain of modules, other than at the VERBOSE level, when a lower-level module detects invalid data coming from a higher-level module, the lower-level module should only log this situation to the DEBUG log, and only if logging provides information that is not otherwise available to the caller. Specifically, there is no need to log situations where an exception is thrown (the exception should contain all the relevant information), or where the only information being logged is contained in an error code. This is especially important in the interaction between the framework and applications, and conditions caused by third-party applications that are properly handled by the framework should not trigger logging higher than the DEBUG level. The only situations that should trigger logging at the INFORMATIVE level or higher is when a module or application detects an error at its own level or coming from a lower level.
 
-* When a condition that would normally justify some logging is likely to occur many times, it can be a good idea to implement some rate-limiting mechanism to prevent overflowing the logs with many duplicate copies of the same (or very similar) information.
+* 어떤 로그가 다발적으로 발생할 가능성이 정당화되는 상황이라면 같은 (또는 아주 비슷한) 정보가 여러 번 기록되어 로그가 넘쳐나는 현상을 방지하기 위해 비율 제한(rate-limiting) 메커니즘을 구현하는 것을 고려하면 좋다.
 
-* Losses of network connectivity are considered common and fully expected and should not be logged gratuitously. A loss of network connectivity that has consequences within an app should be logged at the DEBUG or VERBOSE level (depending on whether the consequences are serious enough and unexpected enough to be logged in a release build).
+* 네트워크와 연결이 끊기는 상황은 자주 발생하는 일이기 때문에 불필요하게 로그되어서는 안 된다. 네트워크의 연결이 끊김으로써 앱 내부에서 어떤 결과를 가져오는 경우에 `DEBUG` 또는 `VERBOSE` 단계의 로그가 적절하다. 릴리즈 빌드에서도 로그될 필요가 있을 만큼 심각하거나 예상하지 못한 정도에 따라 단계를 설정하면 된다.
 
 * A full filesystem on a filesystem that is acceessible to or on behalf of third-party applications should not be logged at a level higher than INFORMATIVE.
 
-* Invalid data coming from any untrusted source (including any file on shared storage, or data coming through just about any network connections) is considered expected and should not trigger any logging at a level higher then DEBUG when it's detected to be invalid (and even then logging should be as limited as possible).
+* 신뢰하지 못하는 모든 소스(공유 저장소의 모든 파일들과 네트워크를 통한 모든 수신 데이터를 포함한다.)로부터 온 데이터가 유효하지 않은 것은 충분히 발생할 가능성이 있는 상황이기 때문에 `DEBUG`보다 상위 단계에서 로그되어서는 안 되며 로그를 하는 경우에도 최대한 제한되어야 한다.
 
 * Keep in mind that the + operator, when used on Strings, implicitly creates a `StringBuilder` with the default buffer size (16 characters) and potentially quite a few other temporary String objects, i.e. that explicitly creating StringBuilders isn't more expensive than relying on the default '+' operator (and can be a lot more efficient in fact). Also keep in mind that code that calls `Log.v()` is compiled and executed on release builds, including building the strings, even if the logs aren't being read.
 
-* Any logging that is meant to be read by other people and to be available in release builds should be terse without being cryptic, and should be reasonably understandable. This includes all logging up to the DEBUG level.
+* 다른 사람들이 보도록 릴리즈 빌드에서 발생시키는 모든 로그는(최소한 `DEBUG` 단계의 로그까지는) 그 의미를 숨기지 않으면서 다른 사람들이 이해할 수 있게끔 간결해야 한다.
 
-* When possible, logging should be kept on a single line if it makes sense. Line lengths up to 80 or 100 characters are perfectly acceptable, while lengths longer than about 130 or 160 characters (including the length of the tag) should be avoided if possible.
+* 가능하다면 로그는 한 줄에서 끝나는 것이 좋다. 80~100자 정도의 로그까지는 충분히 허용될 만하며 태그 길이를 포함해 130~160자 정도되는 로그는 되도록 피해야 한다.
 
-* Logging that reports successes should never be used at levels higher than VERBOSE.
+* 성공(successes)을 보고하는 로그는 `VERBOSE`보다 상위의 단계에서 사용되어서는 안 된다.
 
-* Temporary logging that is used to diagnose an issue that's hard to reproduce should be kept at the DEBUG or VERBOSE level, and should be enclosed by if blocks that allow to disable it entirely at compile-time.
+* 재생산하기 어려운 이슈를 점검하기 위한 일시적인 로그는 `DEBUG` 또는 `VERBOSE` 단계에 머물러야 하며, 컴파일 타임에 전부 비활성화될 수 있게끔 조건문`if` 블록으로 감싸야 한다.
 
-* Be careful about security leaks through the log. Private information should be avoided. Information about protected content must definitely be avoided. This is especially important when writing framework code as it's not easy to know in advance what will and will not be private information or protected content.
+* 로그를 통한 보안 문제에 신경써야 한다. 보호되어야 하는 정보는 물론 개인 정보 역시 로그에 포함되어서는 안 된다. 이 규칙은 특히나 프레임워크 코드를 짤 때 더욱 중요한데 프레임워크 코드를 짤 때는 어떤 정보가 개인 정보, 또는 보호되어야 하는 정보인지 미리 알기가 쉽지 않기 때문이다.
 
-* `System.out.println()` (or `printf()` for native code) should never be used. System.out and System.err get redirected to /dev/null, so your print statements will have no visible effects. However, all the string building that happens for these calls still gets executed.
+* `System.out.println()` 또는 `printf()` 등은 절대 사용하지 말아야 한다. `System.out`과 `System.err`은 `/dev/null`로 리다이렉트되기 때문에 아무런 가시적 효과를 얻을 수 없음에도 여전히 유효하게 실행되는 문장들이기 때문이다.
 
-* *The golden rule of logging is that your logs may not unnecessarily push other logs out of the buffer, just as others may not push out yours.*
+* *로그의 황금률은, 다른사람들의 로그가 당신의 로그를 방해해도 안 되듯이 당신의 로그가 다른 사람들의 로그를 불필요하게 가로막아서는(push out of the buffer) 안 된다는 것이다.*
 
 ### 일관성을 유지하라
 
