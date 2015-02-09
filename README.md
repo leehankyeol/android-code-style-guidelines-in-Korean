@@ -113,29 +113,29 @@ try {
 }
 ```
 
-You should not do this. In almost all cases it is inappropriate to catch generic Exception or Throwable, preferably not Throwable, because it includes Error exceptions as well. It is very dangerous. It means that Exceptions you never expected (including RuntimeExceptions like ClassCastException) end up getting caught in application-level error handling. It obscures the failure handling properties of your code. It means if someone adds a new type of Exception in the code you're calling, the compiler won't help you realize you need to handle that error differently. And in most cases you shouldn't be handling different types of exception the same way, anyway.
+하지만 이렇게 코드를 짜면 안 된다. 거의 모든 경우에 일반적인 예외나 쓰로어블(throwable)을 캐치하는 것은 적절하지 못한 선택이다. (preferably not Throwable, because it includes Error exceptions as well.) 매우 위험한 코드다. 전혀 예상하지 못한 예외가, 예를 들어 ClassCastException 같은 RuntimeExceptions 등, 애플리케이션 레벨의 에러 핸들링에서야 캐치되게 될 것이다. 이런 방식은 코드가 다양한 실패 상황에 대처하지 못하게끔 하는데, 이는 누군가 당신의 코드가 호출하는 곳에 새로운 종류의 예외를 만들었을 때 컴파일러가 그 새로운 에러를 다른 방식으로 다뤄야 한다는 메시지를 당신에게 전달하지 못한다는 의미다. 게다가 어쨌든 그렇게 다른 종류의 예외를 같은 방식으로 처리하는 것 또한 해서는 안 되는 일이다.
 
-There are rare exceptions to this rule: certain test code and top-level code where you want to catch all kinds of errors (to prevent them from showing up in a UI, or to keep a batch job running). In that case you may catch generic Exception (or Throwable) and handle the error appropriately. You should think very carefully before doing this, though, and put in comments explaining why it is safe in this place.
+이 규칙에는 아주 드문 예외가 있다. UI에 나타나는 것을 방지한다든지, 배치 잡(batch job)을 계속 돌려야 한다든지 하는 경우에 모든 종류의 에러를 캐치할 최상위 코드나 테스트 코드가 필요할 때다. 이런 경우엔 일반적인 예외나 쓰로어블을 캐치해서 올바르게 에러를 처리해도 된다. 하지만 이와 같은 처리는 언제나 주의해야 하며 왜 이 상황에 이런 처리가 안전한지 설명하는 주석을 꼭 달아야 한다.
 
-Alternatives to catching generic Exception:
+일반적 예외를 캐치하는 대안들:
 
-* Catch each exception separately as separate catch blocks after a single try. This can be awkward but is still preferable to catching all Exceptions. Beware repeating too much code in the catch blocks.
+* 하나의 트라이`try`문 뒤에 각각 다른 여러 개의 캐치 블록을 작성한다. 보기에 어색할 수는 있지만 여전히 한 번에 모든 예외를 캐치하는 것보다 낫다. 각 캐치 블록 안에 너무 많은 중복 코드를 작성하지 않도록 주의하자.
 
-* Refactor your code to have more fine-grained error handling, with multiple try blocks. Split up the IO from the parsing, handle errors separately in each case.
+* 더 조밀하게 에러 처리를 할 수 있도록 더 많은 트라이 블록으로 코드를 리팩토링(refactoring)하라. Split up the IO from the parsing, handle errors separately in each case.
 
-* Rethrow the exception. Many times you don't need to catch the exception at this level anyway, just let the method throw it.
+* 예외를 다시 쓰로우(rethrow)하라. 많은 경우 어차피 해당 단계에서 예외를 캐치할 필요가 없기 때문이다.
 
-Remember: exceptions are your friend! When the compiler complains you're not catching an exception, don't scowl. Smile: the compiler just made it easier for you to catch runtime problems in your code.
+기억하자. 예외는 우리의 친구다! 컴파일러가 예외를 캐치하지 않고 있다고 불만을 하면 울지 말고 웃어라. 컴파일러는 당신의 코드에서 발생할 수 있는 런타임 문제를 더 쉽게 해결해주고자 할 뿐이다.
 
-### Don't Use Finalizers
+### 파이널라이저(finalizer)를 사용하지 말라
 
-Finalizers are a way to have a chunk of code executed when an object is garbage collected.
+파이널라이저는 객체가 가비지 콜렉션될 때 실행될 코드를 짜두는 방법 중 하나다.
 
-Pros: can be handy for doing cleanup, particularly of external resources.
+장점: 특히 외부 리소스를 포함해 여러모로 리소스 정리를 할 때 편리하다.
 
-Cons: there are no guarantees as to when a finalizer will be called, or even that it will be called at all.
+단점: 언제 파이널라이저가 호출될지, 심지어 파이널라이저가 호출이 되는지 안 되는지도 정확히 알기가 어렵다.
 
-Decision: we don't use finalizers. In most cases, you can do what you need from a finalizer with good exception handling. If you absolutely need it, define a close() method (or the like) and document exactly when that method needs to be called. See InputStream for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs.
+결론: 파이널라이저를 사용하지 말자. 대부분의 경우 파이널라이저가 할 일은 예외 처리를 잘 함으로써 해결이 가능하다. 정말 필요하다면, `close()` 메소드나 그 비슷한 것을 정의하고 정확히 언제 해당 메소드가 호출되어야 하는지를 문서로 작성하라. See InputStream for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs.
 
 ### 임포트`import`는 끝까지 명시하라
 
@@ -418,16 +418,16 @@ if (condition)
 
 주석은 다른 모디파이어(modifier)보다 선행한다. `@Override` 같은 단순한 주석은 다른 언어 요소(language element)와 같은 줄에 위치해도 된다. 주석이 여러 개이거나 파라미터를 받는 주석인 경우, 알파벳 순서대로 한 줄에 하나씩 적는 것이 원칙이다.
 
-자바에서 선정의된(predefined) 세 가지 주석에 대한 안드로이드의 기준은 다음과 같다.
+자바에서 선정의된(predefined) 세 가지 주석에 대해 안드로이드가 정한 기준은 다음과 같다.
 
 * `@Deprecated`: @Deprecated 주석은 주석처리된 요소의 사용이 자제되어야 할 때 사용된다. 만약 @Deprecated 주석을 사용하겠다면 @deprecated 자바독(Javadoc) 태그를 만들어 대안으로 사용될 메소드를 명시해야 한다. 추가적으로, @Deprecated 처리된 메소드들은 여전히 동작해야 한다는 사실도 잊지 마라.
 지난 코드에서 @deprecated 자바독 태그를 본다면 @Deprecated 주석을 달아두자.
 
-* `@Override`: The @Override annotation must be used whenever a method overrides the declaration or implementation from a super-class.
-For example, if you use the @inheritdocs Javadoc tag, and derive from a class (not an interface), you must also annotate that the method @Overrides the parent class's method.
+* `@Override`: @Override 주석은 슈퍼클래스에 구현 또는 선언되어 있는 메소드를 오버라이드(override)하는 경우에 사용된다.
+예를 들어, `@inheritdocs` 자바독 태그를 사용하고, 인터페이스가 아닌 클래스로부터 상속을 받을 경우엔 각 메소드가 부모 클래스의 메소드를 오버라이드한다는 것을 주석으로 표시해야 한다.
 
-* `@SuppressWarnings`: The @SuppressWarnings annotation should only be used under circumstances where it is impossible to eliminate a warning. If a warning passes this "impossible to eliminate" test, the @SuppressWarnings annotation must be used, so as to ensure that all warnings reflect actual problems in the code.
-When a @SuppressWarnings annotation is necessary, it must be prefixed with a TODO comment that explains the "impossible to eliminate" condition. This will normally identify an offending class that has an awkward interface. For example:
+* `@SuppressWarnings`: @SuppressWarnings 주석은 경고(warning)을 없애는 것이 불가능한 상황에서 사용되어야 한다. 발생하는 모든 경고가 코드 상에 실재하는 문제를 반영하기 위해 필요한 주석이다.
+@SuppressWarnings 주석은 "경고를 제거하는 것이 불가능한" 상황을 설명하는 `TODO` 주석과 같이 작성되어야 하는데 이를 통해 어떤 클래스가 이상한 인터페이스를 가지고 있는지 파악할 수 있다. 예를 들면 다음과 같다.
 
 ```java
 // TODO: The third-party class com.third.useful.Utility.rotate() needs generics 
@@ -435,7 +435,7 @@ When a @SuppressWarnings annotation is necessary, it must be prefixed with a TOD
 List<String> blix = Utility.rotate(blax);
 ```
 
-When a @SuppressWarnings annotation is required, the code should be refactored to isolate the software elements where the annotation applies.
+@SuppressWarnings 주석이 들어가야 하는 경우엔, 주석이 적용되는 범위의 코드는 리팩토링(refactoring)되어야 한다.
 
 ### 두문자어(acronym)을 일반 단어로 취급하라
 
