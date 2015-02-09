@@ -416,12 +416,12 @@ if (condition)
 
 ### 자바 표준 주석(annotation)을 사용하라
 
-Annotations should precede other modifiers for the same language element. Simple marker annotations (e.g. @Override) can be listed on the same line with the language element. If there are multiple annotations, or parameterized annotations, they should each be listed one-per-line in alphabetical order.<
+주석은 다른 모디파이어(modifier)보다 선행한다. `@Override` 같은 단순한 주석은 다른 언어 요소(language element)와 같은 줄에 위치해도 된다. 주석이 여러 개이거나 파라미터를 받는 주석인 경우, 알파벳 순서대로 한 줄에 하나씩 적는 것이 원칙이다.
 
-Android standard practices for the three predefined annotations in Java are:
+자바에서 선정의된(predefined) 세 가지 주석에 대한 안드로이드의 기준은 다음과 같다.
 
-* `@Deprecated`: The @Deprecated annotation must be used whenever the use of the annotated element is discouraged. If you use the @Deprecated annotation, you must also have a @deprecated Javadoc tag and it should name an alternate implementation. In addition, remember that a @Deprecated method is still supposed to work.
-If you see old code that has a @deprecated Javadoc tag, please add the @Deprecated annotation.
+* `@Deprecated`: @Deprecated 주석은 주석처리된 요소의 사용이 자제되어야 할 때 사용된다. 만약 @Deprecated 주석을 사용하겠다면 @deprecated 자바독(Javadoc) 태그를 만들어 대안으로 사용될 메소드를 명시해야 한다. 추가적으로, @Deprecated 처리된 메소드들은 여전히 동작해야 한다는 사실도 잊지 마라.
+지난 코드에서 @deprecated 자바독 태그를 본다면 @Deprecated 주석을 달아두자.
 
 * `@Override`: The @Override annotation must be used whenever a method overrides the declaration or implementation from a super-class.
 For example, if you use the @inheritdocs Javadoc tag, and derive from a class (not an interface), you must also annotate that the method @Overrides the parent class's method.
@@ -489,17 +489,17 @@ There is some code that still says `if (localLOGV)`. This is considered acceptab
 
 * 하나의 모듈 안에서는 VERBOSE 단계가 아닌 이상 가능한 한 하나의 에러는 단 한 번만 보고되어야 한다. 한 모듈 내부에서 일련의 함수 호출 과정 안에서는 가장 내부에 위치하는 함수만이 에러를 반환해야 하고 그 함수를 호출하는 동일 모듈 내의 다른 부분에서는, 그렇게 하는 것이 문제를 고립하는데 충분한 도움이 되는 경우에만, 필요한 로그를 덧붙이는 형식이 되어야 한다.
 
-* In a chain of modules, other than at the VERBOSE level, when a lower-level module detects invalid data coming from a higher-level module, the lower-level module should only log this situation to the DEBUG log, and only if logging provides information that is not otherwise available to the caller. Specifically, there is no need to log situations where an exception is thrown (the exception should contain all the relevant information), or where the only information being logged is contained in an error code. This is especially important in the interaction between the framework and applications, and conditions caused by third-party applications that are properly handled by the framework should not trigger logging higher than the DEBUG level. The only situations that should trigger logging at the INFORMATIVE level or higher is when a module or application detects an error at its own level or coming from a lower level.
+* 모듈 체인에서 상위 레벨의 모듈에서 온 데이터가 하위 레벨 모듈에서 유효하지 않은 것으로 확인될 때엔, 로그가 되지 않고서는 함수를 호출한 대상이 그 사실을 알 수 없는 경우에만 `DEBUG` 단계의 로그가 필요하다. (`VERBOSE` 로그는 문제 없다.) 구체적으로, 예외(exception)가 발생하는 경우(예외 자체가 모든 관련된 정보를 담고 있다.), 로그 정보가 오직 에러 코드를 담고 있는 경우에는 로그를 할 필요가 없다. 이 규칙은 프레임워크와 애플리케이션 사이의 상호작용에 있어 특히 중요한데, 써드파티 애플리케이션에서 발생하는 예외 상황을 프레임워크가 올바르게 처리를 하는 상황에선 `DEBUG` 단계를 넘는 로그가 필요하지 않다. `INFORMATIVE` 이상의 로그가 필요한 유일한 상황은 모듈이나 애플리케이션이 자신이 속한 레벨 또는 그보다 하위 레벨에서 오는 오류를 발견했을 때이다.
 
 * 어떤 로그가 다발적으로 발생할 가능성이 정당화되는 상황이라면 같은 (또는 아주 비슷한) 정보가 여러 번 기록되어 로그가 넘쳐나는 현상을 방지하기 위해 비율 제한(rate-limiting) 메커니즘을 구현하는 것을 고려하면 좋다.
 
 * 네트워크와 연결이 끊기는 상황은 자주 발생하는 일이기 때문에 불필요하게 로그되어서는 안 된다. 네트워크의 연결이 끊김으로써 앱 내부에서 어떤 결과를 가져오는 경우에 `DEBUG` 또는 `VERBOSE` 단계의 로그가 적절하다. 릴리즈 빌드에서도 로그될 필요가 있을 만큼 심각하거나 예상하지 못한 정도에 따라 단계를 설정하면 된다.
 
-* A full filesystem on a filesystem that is acceessible to or on behalf of third-party applications should not be logged at a level higher than INFORMATIVE.
+* 써드파티 애플리케이션을 위해 존재하는, 또는 써드파티 애플리케이션이 접근 가능한 파일시스템에 대해서는 `INFORMATIVE`보다 상위 단계에서 로그되면 안 된다.
 
 * 신뢰하지 못하는 모든 소스(공유 저장소의 모든 파일들과 네트워크를 통한 모든 수신 데이터를 포함한다.)로부터 온 데이터가 유효하지 않은 것은 충분히 발생할 가능성이 있는 상황이기 때문에 `DEBUG`보다 상위 단계에서 로그되어서는 안 되며 로그를 하는 경우에도 최대한 제한되어야 한다.
 
-* Keep in mind that the + operator, when used on Strings, implicitly creates a `StringBuilder` with the default buffer size (16 characters) and potentially quite a few other temporary String objects, i.e. that explicitly creating StringBuilders isn't more expensive than relying on the default '+' operator (and can be a lot more efficient in fact). Also keep in mind that code that calls `Log.v()` is compiled and executed on release builds, including building the strings, even if the logs aren't being read.
+* `+` 연산자가 문자열`String`에 사용되면 내부적으로 16글자의 기본 버퍼 사이즈를 갖는 `StringBuilder`를 포함해 임시적으로 사용되는 다른 여러 문자열 객체를 만든다는 사실에 유념하라. 사실 기본 `+` 연산자를 사용하는 것보다 명시적으로(explicitly) `StringBuilder`를 정의하는 것이 훨씬 더 효율적일 수 있다. 또한 `Log.v()`를 호출하는 코드들은 그 로그가 실제로 발생하지 않는다고 해도 문자열을 생성하는 것을 포함, 릴리즈 빌드에서 컴파일되고 실행된다는 사실에도 유념하라.
 
 * 다른 사람들이 보도록 릴리즈 빌드에서 발생시키는 모든 로그는(최소한 `DEBUG` 단계의 로그까지는) 그 의미를 숨기지 않으면서 다른 사람들이 이해할 수 있게끔 간결해야 한다.
 
