@@ -137,7 +137,7 @@ Split up the IO from the parsing, handle errors separately in each case.
 예외는 우리의 친구임을 명심하자. 컴파일러가 당신이 익셉션을 캐치하지 않고 있다고 불만을 하면 찌푸리지 말고 웃어라.
 컴파일러는 당신의 코드에서 발생할 수 있는 런타임 문제를 더 쉽게 해결해주고자 할 뿐이다.
 
-### 파이널라이저(finalizer)를 사용하지 말라
+### 파이널라이저(finalizer)를 사용하지 마라
 
 파이널라이저는 객체가 가비지 콜렉션될 때 실행될 코드를 짜두는 방법 중 하나다.
 
@@ -145,7 +145,7 @@ Split up the IO from the parsing, handle errors separately in each case.
 
 단점: 언제 파이널라이저가 호출될지, 심지어 파이널라이저가 호출이 되는지 안 되는지도 정확히 알기가 어렵다.
 
-결론: 파이널라이저를 사용하지 말라. 대부분의 경우 파이널라이저가 할 일은 올바른 익셉션 처리를 통해 해결 가능하다.
+결론: 파이널라이저를 사용하지 마라. 대부분의 경우 파이널라이저가 할 일은 올바른 익셉션 처리를 통해 해결 가능하다.
 정 필요하다면 `close()` 메소드나 그 비슷한 것을 정의하고 정확히 언제 해당 메소드가 호출되어야 하는지를 문서로 작성하라.
 See InputStream for an example. In this case it is appropriate but not required to print a short
 log message from the finalizer, as long as it is not expected to flood the logs.
@@ -169,7 +169,7 @@ log message from the finalizer, as long as it is not expected to flood the logs.
 
 안드로이드의 자바 라이브러리와 툴을 사용할 때에도 지켜야 할 컨벤션이 있다. 컨벤션의 핵심적인 사항이 바뀌어 이전의 코드가
 더 이상 사용되지 않고 사라질(deprecated) 패턴이나 라이브러리를 사용할 때가 있다. 그렇게 짜여져 있는 코드를 다룰 때는
-현재 유지되고 있는 스타일을 계속 사용하는 것도 괜찮으나 새로운 코드를 짤 때는 절대 사라질 라이브러리를 사용하지 말라.
+현재 유지되고 있는 스타일을 계속 사용하는 것도 괜찮으나 새로운 코드를 짤 때는 절대 사라질 라이브러리를 사용하지 마라.
 
 ## 자바 스타일 규칙
 
