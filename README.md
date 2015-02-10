@@ -479,11 +479,10 @@ TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라
 
 * `INFORMATIVE`: 꼭 에러까지는 아니더라도 효과가 다방면으로 퍼지는 상황처럼 많은 수의 사람들이 주지하고 있어야 하는 상황에 사용되는 로그 단계다. 다른 모듈에 의한 중복 로그를 방지하기 위해, 이 단계의 로그는 해당 영역에서 로그를 하기에 가장 적절한 권한을 가지는(most authoritative) 모듈에 의해 작성되는 것이 좋다. 마찬가지로 항상 작성되어야 하는 로그다.
 
-* `DEBUG`: This level of logging should be used to further note what is happening on the device that could be relevant to investigate and debug unexpected behaviors. You should log only what is needed to gather enough information about what is going on about your component. If your debug logs are dominating the log then you probably should be using verbose logging.
-This level will be logged, even on release builds, and is required to be surrounded by an `if (LOCAL_LOG)` or `if (LOCAL_LOGD)` block, where `LOCAL_LOG[D]` is defined in your class or subcomponent, so that there can exist a possibility to disable all such logging. There must therefore be no active logic in an `if (LOCAL_LOG)` block. All the string building for the log also needs to be placed inside the `if (LOCAL_LOG)` block. The logging call should not be re-factored out into a method call if it is going to cause the string building to take place outside of the if `(LOCAL_LOG)` block.
-There is some code that still says `if (localLOGV)`. This is considered acceptable as well, although the name is nonstandard.
+* `DEBUG`: 예상하지 못한 결과를 디버그하거나 조사할 때 관련이 있을 수도 있는 부분에 대한 기록이 필요할 때 사용되는 로그 단계다. 해당 지점에 대해 충분한 정보를 얻는데 필요한 정도만 로그해야 하며 전체 로그 양에 비해 이 단계의 로그가 너무 많아질 경우엔 `VERBOSE` 단계의 로그를 사용하는 것을 고려해야 한다.
+릴리즈 빌드에서도 필요하다면 기록되어야 하지만 `if (LOCAL_LOG)` 또는 `if (LOCAL_LOGD)` 블록 등으로 감싸서 `LOCAL_LOG[D]`를 정의하는 클래스나 서브컴포넌트 등이 원한다면 모든 로그를 비활성화할 수 있게 해야 한다. 따라서 `if (LOCAL_LOG)` 블록 안에는 유효한 로직이 들어가서는 안 되고 로그에 사용되는 모든 문자열은 `if (LOCAL_LOG)` 블록 안에 들어가 있어야 한다. The logging call should not be re-factored out into a method call if it is going to cause the string building to take place outside of the if `(LOCAL_LOG)` block. 아직도 `if (localLOGV)` 같은 코드가 존재하는데 비록 표준에서 벗어나는 네이밍이지만 허용 가능한 코드다.
 
-* `VERBOSE`: This level of logging should be used for everything else. This level will only be logged on debug builds and should be surrounded by an `if (LOCAL_LOGV)` block (or equivalent) so that it can be compiled out by default. Any string building will be stripped out of release builds and needs to appear inside the `if (LOCAL_LOGV)` block.
+* `VERBOSE`: 나머지 모든 것을 로그할 때 쓰는 로그 단계다. 이 로그는 디버그 빌드에서만 기록되어야 하고 기본적으로 컴파일에서 제외되어야 하기 때문에 `if (LOCAL_LOGV)` 블록 또는 그와 동치인 블록 등으로 둘러싸여야 한다. 마찬가지로 릴리즈 빌드에서는 모든 문자열이 제외되기 때문에 로그와 관련된 문자열들은 `if (LOCAL_LOGV)` 블록 내부에 작성되어야 한다.
 
 *노트*:
 
