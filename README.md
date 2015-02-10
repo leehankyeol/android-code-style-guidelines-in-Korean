@@ -81,8 +81,8 @@ void setServerPort(String value) {
 	}
 	```
 
-컨스트럭터(constructor)에게 런타임익셉션이 전해질 때 원래 발생한 익셉션이 같이 전달되는 것에 주목하자.
-자바 1.3 미만의 버전에서 컴파일을 해야 한다면 원인이 되는 익셉션을 코드에서 제외해야 한다.
+	컨스트럭터(constructor)에게 런타임익셉션이 전해질 때 원래 발생한 익셉션이 같이 전달되는 것에 주목하자.
+	자바 1.3 미만의 버전에서 컴파일을 해야 한다면 원인이 되는 익셉션을 코드에서 제외해야 한다.
 
 * 최후의 보루: 익셉션을 무시하는 것이 올바르다는 확신이 든다면 그렇게 해도 좋다. 다만 합당한 이유를 꼭 코멘트로 남기자.
 
@@ -461,7 +461,8 @@ This also simplifies tool writing.
 * `@Deprecated`: @Deprecated 주석은 주석 처리된 요소의 사용이 자제되어야 할 때 사용된다. 만약 @Deprecated 주석을
 사용하겠다면 @deprecated 자바독(Javadoc) 태그를 만들어 대안으로 사용될 메소드를 명시해야 한다. 추가적으로, @Deprecated
 처리된 메소드들은 여전히 동작해야 한다는 사실도 잊지 마라.
-지난 코드에서 @deprecated 자바독 태그를 본다면 @Deprecated 주석을 달아두자.
+
+	이전 코드에서 @deprecated 자바독 태그를 본다면 @Deprecated 주석을 달아두자.
 
 * `@Override`: @Override 주석은 슈퍼클래스에 구현 또는 선언되어 있는 메소드를 오버라이드(override)하는 경우에 사용된다.
 예를 들어, `@inheritdocs` 자바독 태그를 사용하고, 인터페이스가 아닌 클래스로부터 상속을 받을 경우엔 각 메소드가 부모 클래스의
@@ -469,16 +470,17 @@ This also simplifies tool writing.
 
 * `@SuppressWarnings`: @SuppressWarnings 주석은 경고(warning)을 없애는 것이 불가능한 상황에서 사용되어야 한다.
 발생하는 모든 경고가 코드 상에 실재하는 문제를 반영하기 위해 필요한 주석이다.
-@SuppressWarnings 주석은 "경고를 제거하는 것이 불가능한" 상황을 설명하는 `TODO` 주석과 같이 작성되어야 하는데 이를 통해
-어떤 클래스가 이상한 인터페이스를 가지고 있는지 파악할 수 있다. 예를 들면 다음과 같다.
 
-```java
-// TODO: The third-party class com.third.useful.Utility.rotate() needs generics 
-@SuppressWarnings("generic-cast")
-List<String> blix = Utility.rotate(blax);
-```
+	@SuppressWarnings 주석은 "경고를 제거하는 것이 불가능한" 상황을 설명하는 `TODO` 주석과 같이 작성되어야 하는데 이를 통해
+	어떤 클래스가 이상한 인터페이스를 가지고 있는지 파악할 수 있다. 예를 들면 다음과 같다.
 
-@SuppressWarnings 주석이 들어가야 하는 경우엔, 주석이 적용되는 범위의 코드는 리팩토링(refactoring)되어야 한다.
+	```java
+	// TODO: The third-party class com.third.useful.Utility.rotate() needs generics 
+	@SuppressWarnings("generic-cast")
+	List<String> blix = Utility.rotate(blax);
+	```
+
+	@SuppressWarnings 주석이 들어가야 하는 경우엔, 주석이 적용되는 범위의 코드는 리팩토링(refactoring)되어야 한다.
 
 ### 두문자어(acronym)을 일반 단어로 취급하라
 
@@ -535,12 +537,15 @@ TODO는 모두 대문자로 작성되어야 하며 항상 콜론(:)이 뒤따라
 
 * `DEBUG`: 예상하지 못한 결과를 디버그하거나 조사할 때 관련이 있을 수도 있는 부분에 대한 기록에 사용하는 단계다. 해당 지점에
 대해 충분한 정보를 얻는데 필요한 정도로만 기록해야 하며 전체 로그 양에 비해 이 단계의 로그가 너무 많아질 경우엔 VERBOSE 로그를
-사용하는 것을 고려해야 한다. 릴리즈 빌드에서도 필요하다면 기록되어야 하지만 `if (LOCAL_LOG)` 또는 `if (LOCAL_LOGD)`
-블록 등으로 감싸서 `LOCAL_LOG[D]`를 정의하는 클래스나 서브컴포넌트 등이 원한다면 모든 디버그 로그를 비활성화할 수 있어야 한다.
-따라서 `if (LOCAL_LOG)` 블록 안에는 유효한 로직이 들어가서는 안 되고 로그에 사용되는 모든 문자열은 `if (LOCAL_LOG)` 블록
-안에 들어가 있어야 한다. The logging call should not be re-factored out into a method call if it is going
-to cause the string building to take place outside of the if `(LOCAL_LOG)` block. 아직도
-`if (localLOGV)` 같은 코드가 존재하는데 비록 표준에서 벗어나는 네이밍이지만 허용 가능한 코드다.
+사용하는 것을 고려해야 한다.
+
+	릴리즈 빌드에서도 필요하다면 기록되어야 하지만 `if (LOCAL_LOG)` 또는 `if (LOCAL_LOGD)` 블록 등으로 감싸서
+	`LOCAL_LOG[D]`를 정의하는 클래스나 서브컴포넌트 등이 원한다면 모든 디버그 로그를 비활성화할 수 있어야 한다.
+	따라서 `if (LOCAL_LOG)` 블록 안에는 유효한 로직이 들어가서는 안 되고 로그에 사용되는 모든 문자열은 `if (LOCAL_LOG)`
+	블록 안에 들어가 있어야 한다. The logging call should not be re-factored out into a method call
+	if it is going to cause the string building to take place outside of the if `(LOCAL_LOG)` block.
+	
+	아직도 `if (localLOGV)` 같은 코드가 존재하는데 비록 표준에서 벗어나는 네이밍이지만 허용 가능한 코드다.
 
 * `VERBOSE`: 나머지 모든 것을 로그할 때 쓰는 단계다. 이 로그는 디버그 빌드에서만 기록되어야 하고 기본적으로 컴파일에서
 제외되어야 하기 때문에 `if (LOCAL_LOGV)` 블록 또는 그와 동치인 블록 등으로 둘러싸여야 한다. DEBUG와 마찬가지로 릴리즈
